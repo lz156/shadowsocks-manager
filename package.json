@@ -1,6 +1,6 @@
 {
   "name": "shadowsocks-manager-cli",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,8 @@
   "dependencies": {
     "babel-core": "^6.14.0",
     "babel-preset-stage-3": "^6.11.0",
-    "bamei": "latest"
+    "bamei": "latest",
+    "commander": "^2.9.0"
   },
   "repository": {
     "type": "git",
@@ -24,5 +25,8 @@
   "bugs": {
     "url": "https://github.com/gyteng/shadowsocks-manager-cli/issues"
   },
-  "homepage": "https://github.com/gyteng/shadowsocks-manager-cli#readme"
+  "homepage": "https://github.com/gyteng/shadowsocks-manager-cli#readme",
+  "bin": {
+    "smc": "./bin/smc"
+  }
 }
