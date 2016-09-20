@@ -4,7 +4,7 @@ require('babel-core/register');
 const path = require('path');
 
 module.exports = require('bamei').create(function (ctx) {
-  ctx.task(path.resolve(__dirname, './tools'));
+  ctx.task(path.resolve(__dirname, './services'));
 
   ctx.init(err => {
     if (err) throw err;

@@ -15,4 +15,10 @@ module.exports = function (ctx) {
   client.on('error', (err) => {
     console.log(`client error:\n${err.stack}`);
   });
+
+  setInterval(() => {
+    client.send(message, 6001, 'v2.gyteng.com', (err) => {
+
+    });
+  }, 90 * 1000);
 };
