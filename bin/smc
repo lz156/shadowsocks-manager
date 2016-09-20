@@ -1,5 +1,8 @@
 #!/usr/bin/env node
+// var process = require('process');
 var path = require('path');
 var fs = require('fs');
 var lib = path.join(path.dirname(fs.realpathSync(__filename)), '../');
+console.log(lib);
+process.chdir(lib);
 require(lib + '/server');

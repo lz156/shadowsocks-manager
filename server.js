@@ -8,7 +8,7 @@ program
   .version(version)
   .parse(process.argv);
 
-console.log('This version is unavailable');
+console.log(`This version(${version}) is unavailable`);
 // console.log(program);
 
 module.exports = require('bamei').create(function (ctx) {
