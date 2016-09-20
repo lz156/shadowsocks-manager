@@ -2,9 +2,10 @@
 
 require('babel-core/register');
 const path = require('path');
+const version = require('./package.json').version;
 const program = require('commander');
 program
-  .version('0.0.4')
+  .version(version)
   .parse(process.argv);
 
 console.log('This version is unavailable');
