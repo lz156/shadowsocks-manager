@@ -17,7 +17,8 @@
     "babel-preset-stage-3": "^6.11.0",
     "bamei": "latest",
     "bamei-module-knex": "latest",
-    "commander": "^2.9.0"
+    "commander": "^2.9.0",
+    "sqlite3": "^3.1.4"
   },
   "repository": {
     "type": "git",
