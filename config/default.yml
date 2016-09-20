@@ -2,6 +2,12 @@ shadowsocks:
   host: v2.gyteng.com
   port: 6001
 
+knex:
+  client: 'sqlite3'
+  connection:
+    filename: './db/db.sqlite'
+  useNullAsDefault: true
+
 logger:
   init:
     level: fatal

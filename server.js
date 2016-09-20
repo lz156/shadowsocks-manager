@@ -13,7 +13,8 @@ console.log('This version is unavailable');
 module.exports = require('bamei').create(function (ctx) {
   // ctx.task(path.resolve(__dirname, './services'));
   // console.log(ctx.config.all());
-
+  ctx.module('knex');
+  ctx.task(path.resolve(__dirname, './models'));
   ctx.init(err => {
     if (err) throw err;
     ctx.catchError();
