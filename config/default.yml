@@ -1,2 +1,9 @@
-host: v2.gyteng.com
-port: 6001
+shadowsocks:
+  host: v2.gyteng.com
+  port: 6001
+
+logger:
+  init:
+    level: fatal
+  process:
+    level: fatal
