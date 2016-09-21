@@ -17,8 +17,12 @@ module.exports = function (ctx) {
     client.send(message, port, host, (err) => {});
   };
 
+  const sendMessage = (message) => {
+    client.send(message, port, host, (err) => {});
+  };
+
   client.on('message', (msg, rinfo) => {
-    // console.log(`client got: ${msg} from ${rinfo.address}:${rinfo.port}`);
+    console.log(`client got: ${msg} from ${rinfo.address}:${rinfo.port}`);
     const msgStr = new String(msg);
     if(msgStr.substr(0, 5) === 'stat:') {
       const flow = JSON.parse(msgStr.substr(5));
@@ -32,9 +36,7 @@ module.exports = function (ctx) {
       }).filter(f => {
         return f.flow > 0;
       });
-
       knex('flow').insert(insertFlow).then();
-
     };
   });
 
@@ -46,4 +48,46 @@ module.exports = function (ctx) {
   setInterval(() => {
     sendPing();
   }, 20 * 1000);
+
+  const addAccount = async (port, password) => {
+    try {
+      const insertAccount = await knex('account').insert({
+        port,
+        password,
+      });
+      sendMessage(`add: {"server_port": ${ port }, "password": "${ password }"}`);
+      return 'success';
+    } catch(err) {
+      Promise.reject('error');
+    }
+  };
+  const removeAccount = async (port) => {
+    try {
+      const deleteAccount = await knex('account').where({
+        port,
+      }).delete();
+      sendMessage(`remove: {"server_port": ${ port }}`);
+      return 'success';
+    } catch(err) {
+      Promise.reject('error');
+    }
+  };
+  const changePassword = async (port, password) => {
+    try {
+      const updateAccount = await knex('account').where({port}).update({
+        password,
+      });
+      sendMessage(`remove: {"server_port": ${ port }}`);
+      sendMessage(`add: {"server_port": ${ port }, "password": "${ password }"}`);
+      return 'success';
+    } catch(err) {
+      Promise.reject('error');
+    }
+  };
+
+  ctx.set('shadowsocks', {
+    addAccount,
+    removeAccount,
+    changePassword,
+  });
 };
