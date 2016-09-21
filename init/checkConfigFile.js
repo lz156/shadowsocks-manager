@@ -13,10 +13,15 @@ module.exports = function (ctx, next) {
 
   program
     .version(version)
-    .option('-h, --host [ggg]', 'abc')
+    .option('-h, --host [address]', 'shadowsocks host')
+    .option('-p, --port [port]', 'shadowsocks port')
     .parse(process.argv);
-  console.log(program.host);
-  console.log(program.ggg);
+  if(program.host) {
+    config.shadowsocks.host = program.host;
+  }
+  if(program.port) {
+    config.shadowsocks.port = program.port;
+  }
 
   try {
     fs.statSync(smcPath);
@@ -25,6 +30,6 @@ module.exports = function (ctx, next) {
   }
   config.knex.connection.filename = path.resolve(smcPath + config.knex.connection.filename);
 
-  // console.log(ctx.config.all());
+  console.log(ctx.config.all());
   next();
 };
