@@ -13,8 +13,8 @@ module.exports = function (ctx, next) {
 
   program
     .version(version)
-    .option('-h, --host [address]', 'shadowsocks host')
-    .option('-p, --port [port]', 'shadowsocks port')
+    .option('-h, --host [address]', 'ss-manager host')
+    .option('-p, --port [port]', 'ss-manager port')
     .parse(process.argv);
   if(program.host) {
     config.shadowsocks.host = program.host;

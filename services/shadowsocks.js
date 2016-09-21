@@ -47,7 +47,7 @@ module.exports = function (ctx) {
   sendPing();
   setInterval(() => {
     sendPing();
-  }, 20 * 1000);
+  }, 60 * 1000);
 
   const addAccount = async (port, password) => {
     try {
@@ -61,6 +61,7 @@ module.exports = function (ctx) {
       Promise.reject('error');
     }
   };
+
   const removeAccount = async (port) => {
     try {
       const deleteAccount = await knex('account').where({
@@ -72,6 +73,7 @@ module.exports = function (ctx) {
       Promise.reject('error');
     }
   };
+
   const changePassword = async (port, password) => {
     try {
       const updateAccount = await knex('account').where({port}).update({
