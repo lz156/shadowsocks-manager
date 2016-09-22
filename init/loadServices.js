@@ -5,8 +5,9 @@ module.exports = function (ctx, next) {
   console.log(config);
   if(config.type === 's') {
     ctx.task(path.resolve(__dirname, '../services/shadowsocks.js'));
+    ctx.task(path.resolve(__dirname, '../services/server.js'));
   } else if (config.type === 'm') {
-    ctx.task(path.resolve(__dirname, '../services/manager.js'));
+
   }
   next();
 };
