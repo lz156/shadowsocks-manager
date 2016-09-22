@@ -5,6 +5,7 @@ module.exports = function (ctx) {
   const config = ctx.config.all();
   const host = config.listen.host;
   const port = +config.listen.port;
+  const shadowsocks = ctx.get('shadowsocks');
 
   const net = require('net');
 
@@ -20,7 +21,16 @@ module.exports = function (ctx) {
   };
 
   const receiveCommand = (data) => {
-    console.log(data);
+    try {
+      const message = JSON.parse(data.toString());
+      if(message.command === 'add') {
+        const port = +message.port;
+        const password = message.password;
+        shadowsocks.addAccount(port, password);
+      }
+    } catch(err) {
+      throw err;
+    }
   };
 
   const checkData = (receive) => {

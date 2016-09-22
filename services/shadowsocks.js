@@ -18,6 +18,7 @@ module.exports = function (ctx) {
   };
 
   const sendMessage = (message) => {
+    console.log('send: ' + message);
     client.send(message, port, host, (err) => {});
   };
 
