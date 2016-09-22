@@ -13,8 +13,13 @@ module.exports = function (ctx, next) {
 
   program
     .version(version)
-    .option('-h, --host [address]', 'ss-manager host')
-    .option('-p, --port [port]', 'ss-manager port')
+    .option('-c, --config [file]', 'config file, default: ~/.smc/config')
+    .option('-d, --db [file]', 'sqlite3 file, default: ~/.smc/db.sqlite')
+    .option('-t, --type [type]', 'manager type, s for server side, m for manager type, default: s')
+    .option('-h, --host [address]', 'ss-manager host, only for type s')
+    .option('-p, --port [port]', 'ss-manager port, only for type s')
+    .option('-l, --listen [address]', 'manager host, only for type m')
+    .option('-P, --managerport [port]', 'manager port, only for type m')
     .parse(process.argv);
   if(program.host) {
     config.shadowsocks.host = program.host;
