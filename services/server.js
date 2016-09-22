@@ -25,6 +25,7 @@ module.exports = function (ctx) {
 
   const checkData = (receive) => {
     const buffer = receive.data;
+    console.log(buffer);
     let length = 0;
     let data;
     let code;

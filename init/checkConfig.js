@@ -16,11 +16,12 @@ module.exports = function (ctx, next) {
     .option('-c, --config [file]', 'config file, default: ~/.smc/config')
     .option('-d, --db [file]', 'sqlite3 file, default: ~/.smc/db.sqlite')
     .option('-e, --empty', 'clean db file')
-    .option('-t, --type [type]', 'manager type, s for server side, m for manager type, default: s')
+    .option('-t, --type [type]', 'manager type, s for server side, m for manager side, default: s')
     .option('-h, --host [address]', 'ss-manager host, only for type s')
     .option('-p, --port [port]', 'ss-manager port, only for type s')
-    .option('-l, --listen [address]', 'manager host, only for type m')
-    .option('-P, --manager-port [port]', 'manager port, only for type m')
+    .option('-H, --manager-Host [address]', 'manager host, type s for listening, type m for manager')
+    .option('-P, --manager-port [port]', 'manager port, type s for listening, type m for manager')
+    .option('-x, --password [password]', 'manager password, both server side and manager side must be equals')
     .parse(process.argv);
 
   config.type = program.type || config.type;

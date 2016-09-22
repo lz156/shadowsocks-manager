@@ -7,7 +7,7 @@ module.exports = function (ctx, next) {
     ctx.task(path.resolve(__dirname, '../services/shadowsocks.js'));
     ctx.task(path.resolve(__dirname, '../services/server.js'));
   } else if (config.type === 'm') {
-
+    ctx.task(path.resolve(__dirname, '../services/manager.js'));
   }
   next();
 };
