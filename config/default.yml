@@ -1,3 +1,5 @@
+type: s
+
 shadowsocks:
   host: 127.0.0.1
   port: 6001
@@ -5,11 +7,12 @@ shadowsocks:
 listen:
   host: 0.0.0.0
   port: 6002
+  password: '123456'
 
 knex:
   client: 'sqlite3'
   connection:
-    filename: '/db.sqlite'
+    filename: 'db.sqlite'
   useNullAsDefault: true
 
 logger:

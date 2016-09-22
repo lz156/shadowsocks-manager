@@ -4,10 +4,14 @@ require('babel-core/register');
 const path = require('path');
 module.exports = require('bamei').create(function (ctx) {
 
-  ctx.task(path.resolve(__dirname, './init/checkConfigFile.js'));
+  ctx.task(path.resolve(__dirname, './init/checkConfig.js'));
   ctx.module('knex');
-  ctx.task(path.resolve(__dirname, './models'));
-  ctx.task(path.resolve(__dirname, './services'));
+  ctx.task(path.resolve(__dirname, './init/loadModels.js'));
+  ctx.task(path.resolve(__dirname, './init/loadServices.js'));
+  // ctx.module('knex');
+  // ctx.task(path.resolve(__dirname, './models'));
+
+  // ctx.task(path.resolve(__dirname, './services'));
   ctx.init(err => {
     if (err) throw err;
     ctx.catchError();
