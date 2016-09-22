@@ -9,7 +9,7 @@ module.exports = function (ctx, next) {
   const version = require(path.resolve(__dirname, '../package.json')).version;
   const config = ctx.config.all();
 
-  const smcPath = path.resolve(os.homedir() + '/.smc/');
+  let smcPath = path.resolve(os.homedir() + '/.smc/');
 
   program
     .version(version)
@@ -24,6 +24,7 @@ module.exports = function (ctx, next) {
     .parse(process.argv);
 
   config.type = program.type || config.type;
+  config.empty = program.empty || config.empty;
   if(program.host) {
     config.shadowsocks.host = program.host;
   }
@@ -37,7 +38,9 @@ module.exports = function (ctx, next) {
     fs.mkdirSync(smcPath);
   }
   config.knex.connection.filename = path.resolve(smcPath + config.knex.connection.filename);
-
+  if(program.db) {
+    config.knex.connection.filename = path.resolve(program.db);
+  }
   // console.log(ctx.config.all());
   next();
 };

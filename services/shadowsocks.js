@@ -22,11 +22,11 @@ module.exports = function (ctx) {
   };
 
   client.on('message', (msg, rinfo) => {
-    console.log(`client got: ${msg} from ${rinfo.address}:${rinfo.port}`);
+    // console.log(`client got: ${msg} from ${rinfo.address}:${rinfo.port}`);
     const msgStr = new String(msg);
     if(msgStr.substr(0, 5) === 'stat:') {
       const flow = JSON.parse(msgStr.substr(5));
-      // console.log(flow);
+      console.log(flow);
       const insertFlow = Object.keys(flow).map(m => {
         return {
           port: +m,
