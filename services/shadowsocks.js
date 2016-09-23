@@ -27,7 +27,7 @@ module.exports = function (ctx) {
     const msgStr = new String(msg);
     if(msgStr.substr(0, 5) === 'stat:') {
       const flow = JSON.parse(msgStr.substr(5));
-      console.log(flow);
+      // console.log(flow);
       const insertFlow = Object.keys(flow).map(m => {
         return {
           port: +m,

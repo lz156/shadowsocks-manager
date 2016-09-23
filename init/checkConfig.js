@@ -19,7 +19,7 @@ module.exports = function (ctx, next) {
     .option('-t, --type [type]', 'manager type, s for server side, m for manager side, default: s')
     .option('-h, --host [address]', 'ss-manager host, only for type s')
     .option('-p, --port [port]', 'ss-manager port, only for type s')
-    .option('-H, --manager-Host [address]', 'manager host, type s for listening, type m for manager')
+    .option('-H, --manager-host [address]', 'manager host, type s for listening, type m for manager')
     .option('-P, --manager-port [port]', 'manager port, type s for listening, type m for manager')
     .option('-x, --password [password]', 'manager password, both server side and manager side must be equals')
     .parse(process.argv);
@@ -31,6 +31,12 @@ module.exports = function (ctx, next) {
   }
   if(program.port) {
     config.shadowsocks.port = program.port;
+  }
+  if(program.managerHost) {
+    config.listen.host = program.managerHost;
+  }
+  if(program.managerPort) {
+    config.listen.port = program.managerPort;
   }
 
   config.knex.connection.filename = path.resolve(smcPath + '/' + config.knex.connection.filename);
