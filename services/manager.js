@@ -37,11 +37,15 @@ module.exports = function (ctx) {
     });
   };
 
-  sendMessage({
-    command: 'list',
-    port: 60001,
-    password: 'gyttyg',
-  }).then(s => { console.log(s); }, e => { console.log(e); });
+  // sendMessage({
+  //   command: 'list',
+  //   port: 60001,
+  //   password: 'gyttyg',
+  // }).then(s => { console.log(s); }, e => { console.log(e); });
   // sendMessage({}).then(s => { console.log(s); }, e => { console.log(e); });
   // sendMessage({}).then(s => { console.log(s); }, e => { console.log(e); });
+
+  ctx.set('manager', {
+    send: sendMessage,
+  });
 };
