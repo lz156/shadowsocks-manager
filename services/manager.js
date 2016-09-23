@@ -11,46 +11,37 @@ module.exports = function (ctx) {
     const dataBuffer = new Buffer(message);
     const length = dataBuffer.length + 2;
     const lengthBuffer = new Buffer(('0000' + length.toString(16)).substr(-4), 'hex');
-    const code = crypto.createHash('md5').update(message + '123456').digest('hex').substr(0, 4);
+    const code = crypto.createHash('md5').update(message + password).digest('hex').substr(0, 4);
     const codeBuffer = new Buffer(code, 'hex');
     const pack = Buffer.concat([lengthBuffer, dataBuffer, codeBuffer]);
     return pack;
   };
 
   const sendMessage = (data) => {
-    const client = net.connect({
-      host: config.listen.host,
-      port: config.listen.port,
-    }, () => {
-      client.write(pack(data));
-    });
-    client.on('data', data => {
-      console.log(data.toString());
-      client.end();
-      client.close();
+    return new Promise((res, rej) => {
+      const client = net.connect({
+        host: config.listen.host,
+        port: config.listen.port,
+      }, () => {
+        client.write(pack(data));
+      });
+      client.on('data', data => {
+        const message = JSON.parse(data.toString());
+        if(message.code === 0) {
+          res(message.data);
+        } else {
+          rej('failure');
+        }
+        client.end();
+      });
     });
   };
 
-  sendMessage({});
-  sendMessage({});
-  sendMessage({});
-
-  // const client = net.connect({
-  //   host: '127.0.0.1',
-  //   port: 6002
-  // }, () => {
-  //   console.log('connected to server!');
-  //   client.write(pack({
-  //     command: 'add',
-  //     port: 39739,
-  //     password: password,
-  //   }));
-  // });
-  // client.on('data', (data) => {
-  //   console.log(data.toString());
-  //   client.end();
-  // });
-  // client.on('end', () => {
-  //   console.log('disconnected from server');
-  // });
+  sendMessage({
+    command: 'list',
+    port: 60001,
+    password: 'gyttyg',
+  }).then(s => { console.log(s); }, e => { console.log(e); });
+  // sendMessage({}).then(s => { console.log(s); }, e => { console.log(e); });
+  // sendMessage({}).then(s => { console.log(s); }, e => { console.log(e); });
 };

@@ -88,9 +88,19 @@ module.exports = function (ctx) {
     }
   };
 
+  const listAccount = async () => {
+    try {
+      const accounts = await knex('account').select([ 'port', 'password' ]);
+      return accounts;
+    } catch(err) {
+      Promise.reject('error');
+    }
+  };
+
   ctx.set('shadowsocks', {
     addAccount,
     removeAccount,
     changePassword,
+    listAccount,
   });
 };

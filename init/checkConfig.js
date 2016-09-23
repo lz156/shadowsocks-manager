@@ -38,6 +38,9 @@ module.exports = function (ctx, next) {
   if(program.managerPort) {
     config.listen.port = program.managerPort;
   }
+  if(program.password) {
+    config.listen.password = program.password;
+  }
 
   config.knex.connection.filename = path.resolve(smcPath + '/' + config.knex.connection.filename);
   next();

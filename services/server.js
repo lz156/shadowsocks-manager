@@ -22,15 +22,17 @@ module.exports = function (ctx) {
 
   const receiveCommand = async (data) => {
     try {
-      if(data.toString() === '{}') {
-        return;
-      }
+      // if(data.toString() === '{}') {
+      //   return;
+      // }
       const message = JSON.parse(data.toString());
       console.log(message);
       if(message.command === 'add') {
         const port = +message.port;
         const password = message.password;
         return shadowsocks.addAccount(port, password);
+      } else if (message.command === 'list') {
+        return shadowsocks.listAccount();
       } else {
         return Promise.reject();
       }
@@ -53,14 +55,16 @@ module.exports = function (ctx) {
       code = buffer.slice(length, length + 2);
       receive.data = buffer.slice(length + 2, buffer.length);
       if(!checkCode(data, password, code)) {
-        return receive.socket.close();
+        receive.socket.end();
+        receive.socket.close();
+        return;
       }
       receiveCommand(data).then(s => {
-        receive.socket.write('success');
-        receive.socket.close();
+        receive.socket.end(JSON.stringify({code: 0, data: s}));
+        // receive.socket.close();
       }, e => {
-        receive.socket.write('failure');
-        receive.socket.close();
+        receive.socket.end(JSON.stringify({code: 1}));
+        // receive.socket.close();
       });
       if(buffer.length > length + 2) {
         checkData(receive);
