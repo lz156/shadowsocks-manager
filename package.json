@@ -18,6 +18,7 @@
     "bamei": "latest",
     "bamei-module-knex": "latest",
     "commander": "^2.9.0",
+    "fs-extra": "^0.30.0",
     "sqlite3": "^3.1.4"
   },
   "repository": {

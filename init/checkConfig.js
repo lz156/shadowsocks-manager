@@ -13,7 +13,7 @@ module.exports = function (ctx, next) {
 
   program
     .version(version)
-    .option('-c, --config [file]', 'config file, default: ~/.smc/config')
+    .option('-c, --config [file]', 'config file, default: ~/.smc/default.yml')
     .option('-d, --db [file]', 'sqlite3 file, default: ~/.smc/db.sqlite')
     .option('-e, --empty', 'clean db file')
     .option('-t, --type [type]', 'manager type, s for server side, m for manager side, default: s')
@@ -33,15 +33,6 @@ module.exports = function (ctx, next) {
     config.shadowsocks.port = program.port;
   }
 
-  try {
-    fs.statSync(smcPath);
-  } catch(err) {
-    fs.mkdirSync(smcPath);
-  }
-  config.knex.connection.filename = path.resolve(smcPath + config.knex.connection.filename);
-  if(program.db) {
-    config.knex.connection.filename = path.resolve(program.db);
-  }
-  // console.log(ctx.config.all());
+  config.knex.connection.filename = path.resolve(smcPath + '/' + config.knex.connection.filename);
   next();
 };
