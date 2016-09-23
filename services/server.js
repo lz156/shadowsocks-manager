@@ -31,6 +31,9 @@ module.exports = function (ctx) {
         const port = +message.port;
         const password = message.password;
         return shadowsocks.addAccount(port, password);
+      } else if (message.command === 'del') {
+        const port = +message.port;
+        return shadowsocks.removeAccount(port);
       } else if (message.command === 'list') {
         return shadowsocks.listAccount();
       } else {

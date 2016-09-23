@@ -80,13 +80,29 @@ module.exports = async function (ctx) {
     },
   }];
 
+  const list = async () => {
+    try {
+      const result = await manager.send({
+        command: 'list',
+      });
+      console.log(result);
+    } finally {
+      return { confirm: false };
+    }
+  };
+
   const mainMenu = () => {
+    console.log();
     return inquirer.prompt(main)
     .then(answer => {
       if(answer.main === 'add') {
         return inquirer.prompt(add);
       } else if (answer.main === 'del') {
         return inquirer.prompt(del);
+      } else if (answer.main === 'list') {
+        return list();
+      } else {
+        return Promise.reject();
       }
     }).then(answer => {
       if(answer.confirm) {
