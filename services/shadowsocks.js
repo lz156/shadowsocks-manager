@@ -30,7 +30,7 @@ module.exports = function (ctx) {
     });
   };
 
-  client.on('message', (msg, rinfo) => {
+  client.on('message', async (msg, rinfo) => {
     const msgStr = new String(msg);
     if(msgStr.substr(0, 5) === 'stat:') {
       const flow = JSON.parse(msgStr.substr(5));
@@ -44,6 +44,15 @@ module.exports = function (ctx) {
       }).filter(f => {
         return f.flow > 0;
       });
+      const accounts = await knex('account').select([ 'port' ]);
+      insertFlow.forEach(fe => {
+        const account = accounts.filter(f => {
+          return fe.port === f.port;
+        })[0];
+        if(!account) {
+          sendMessage(`remove: {"server_port": ${ fe.port }}`);
+        }
+      });
       knex('flow').insert(insertFlow).then();
     };
   });
@@ -56,7 +65,7 @@ module.exports = function (ctx) {
   sendPing();
   setInterval(() => {
     sendPing();
-  }, 90 * 1000);
+  }, 60 * 1000);
 
   const addAccount = async (port, password) => {
     try {

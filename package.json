@@ -1,6 +1,6 @@
 {
   "name": "shadowsocks-manager-cli",
-  "version": "0.0.4",
+  "version": "0.0.30",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -17,7 +17,10 @@
     "babel-preset-stage-3": "^6.11.0",
     "bamei": "latest",
     "bamei-module-knex": "latest",
-    "commander": "^2.9.0"
+    "commander": "^2.9.0",
+    "fs-extra": "^0.30.0",
+    "inquirer": "^1.1.3",
+    "sqlite3": "^3.1.4"
   },
   "repository": {
     "type": "git",
