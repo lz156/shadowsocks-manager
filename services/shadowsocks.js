@@ -88,11 +88,32 @@ module.exports = function (ctx) {
     }
   };
 
-  const listAccount = async () => {
+  const listAccount = async (options = {}) => {
     try {
-      const accounts = await knex('account').select([ 'port', 'password' ]);
+      if(options.flow) {
+        const accounts = await knex('account').select([ 'port', 'password' ]);
+        return accounts;
+      }
+      if(!options.startTime) {options.startTime = new Date(0);}
+      if(!options.endTime) {options.endTime = Date.now();}
+      // const accounts = await knex('account')
+      // .select([ 'account.port', 'account.password', 'flow.flow' ])
+      // .leftJoin('flow', 'account.port', 'flow.port')
+      // .groupBy('account.port').sum('flow.flow as sumFlow')
+      // .whereBetween('flow.time', [options.startTime, options.endTime]);
+
+
+      const accounts = await knex.raw(`
+        SELECT account.port, account.password, IFNULL(SUM(flow.flow),0) AS sumFlow
+        FROM account
+        LEFT JOIN flow ON account.port = flow.port
+        GROUP BY account.port
+      `);
+
+      console.log(accounts);
       return accounts;
     } catch(err) {
+      console.log(err);
       Promise.reject('error');
     }
   };
