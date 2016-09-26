@@ -2,7 +2,6 @@
 
 module.exports = function (ctx) {
   const dgram = require('dgram');
-  const message = Buffer.from('ping');
   const client = dgram.createSocket('udp4');
 
   const config = ctx.config.all();
@@ -13,10 +12,10 @@ module.exports = function (ctx) {
 
   const moment = require('moment');
 
-  // console.log(config);
+
 
   const sendPing = () => {
-    client.send(message, port, host, (err) => {});
+    client.send(new Buffer('ping'), port, host, (err) => {});
   };
 
   const sendMessage = (message) => {
@@ -24,8 +23,14 @@ module.exports = function (ctx) {
     client.send(message, port, host, (err) => {});
   };
 
+  const startUp = async () => {
+    const accounts = await knex('account').select([ 'port', 'password' ]);
+    accounts.forEach(f => {
+      sendMessage(`add: {"server_port": ${ f.port }, "password": "${ f.password }"}`);
+    });
+  };
+
   client.on('message', (msg, rinfo) => {
-    // console.log(`client got: ${msg} from ${rinfo.address}:${rinfo.port}`);
     const msgStr = new String(msg);
     if(msgStr.substr(0, 5) === 'stat:') {
       const flow = JSON.parse(msgStr.substr(5));
@@ -47,10 +52,11 @@ module.exports = function (ctx) {
     console.log(`client error:\n${err.stack}`);
   });
 
+  startUp();
   sendPing();
   setInterval(() => {
     sendPing();
-  }, 60 * 1000);
+  }, 90 * 1000);
 
   const addAccount = async (port, password) => {
     try {
