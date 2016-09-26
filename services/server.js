@@ -90,10 +90,10 @@ module.exports = function (ctx) {
       receiveData(receive, data);
     });
     socket.on('end', () => {
-      console.log('end');
+      // console.log('end');
     });
     socket.on('close', () => {
-      console.log('close');
+      // console.log('close');
     });
   }).on('error', (err) => {
     throw err;

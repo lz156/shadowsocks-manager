@@ -11,30 +11,49 @@ module.exports = function (ctx) {
   const knex = ctx.get('knex.client');
 
   const moment = require('moment');
-
-
+  let lastFlow;
 
   const sendPing = () => {
-    client.send(new Buffer('ping'), port, host, (err) => {});
+    client.send(new Buffer('ping'), port, host);
   };
 
   const sendMessage = (message) => {
     console.log('send: ' + message);
-    client.send(message, port, host, (err) => {});
+    const client = dgram.createSocket('udp4');
+    client.send(message, port, host, (err) => {
+      // client.on('message', function(m, r) {
+        // console.log(m.toString());
+        client.close();
+      // });
+    });
   };
 
   const startUp = async () => {
+    client.send(new Buffer('ping'), port, host);
     const accounts = await knex('account').select([ 'port', 'password' ]);
     accounts.forEach(f => {
       sendMessage(`add: {"server_port": ${ f.port }, "password": "${ f.password }"}`);
     });
   };
 
+  const compareWithLastFlow = (flow, lastFlow) => {
+    if(!lastFlow) {
+      return flow;
+    }
+    for(const f in flow) {
+      if(lastFlow[f] === flow[f]) {
+        flow[f] = 0;
+      }
+    }
+    return flow;
+  };
+
   client.on('message', async (msg, rinfo) => {
     const msgStr = new String(msg);
     if(msgStr.substr(0, 5) === 'stat:') {
-      const flow = JSON.parse(msgStr.substr(5));
-      console.log(flow);
+      let flow = JSON.parse(msgStr.substr(5));
+      flow = compareWithLastFlow(flow, lastFlow);
+      lastFlow = flow;
       const insertFlow = Object.keys(flow).map(m => {
         return {
           port: +m,
@@ -62,7 +81,7 @@ module.exports = function (ctx) {
   });
 
   startUp();
-  sendPing();
+  // sendPing();
   setInterval(() => {
     sendPing();
   }, 60 * 1000);

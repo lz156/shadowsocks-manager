@@ -41,7 +41,11 @@ module.exports = function (ctx, next) {
   if(program.password) {
     config.listen.password = program.password;
   }
+  if(program.db) {
+    config.knex.connection.filename = path.resolve(program.db);
+  } else {
+    config.knex.connection.filename = path.resolve(smcPath + '/' + config.knex.connection.filename);
+  }
 
-  config.knex.connection.filename = path.resolve(smcPath + '/' + config.knex.connection.filename);
   next();
 };
