@@ -11,6 +11,8 @@ module.exports = function (ctx) {
 
   const knex = ctx.get('knex.client');
 
+  const moment = require('moment');
+
   // console.log(config);
 
   const sendPing = () => {
@@ -27,7 +29,7 @@ module.exports = function (ctx) {
     const msgStr = new String(msg);
     if(msgStr.substr(0, 5) === 'stat:') {
       const flow = JSON.parse(msgStr.substr(5));
-      // console.log(flow);
+      console.log(flow);
       const insertFlow = Object.keys(flow).map(m => {
         return {
           port: +m,
@@ -90,27 +92,36 @@ module.exports = function (ctx) {
 
   const listAccount = async (options = {}) => {
     try {
-      if(options.flow) {
+      if(!options.flow) {
         const accounts = await knex('account').select([ 'port', 'password' ]);
         return accounts;
       }
-      if(!options.startTime) {options.startTime = new Date(0);}
-      if(!options.endTime) {options.endTime = Date.now();}
+      const startTime = moment(options.startTime || new Date(0)).toDate();
+      const endTime = moment(options.endTime || new Date()).toDate();
+
       // const accounts = await knex('account')
       // .select([ 'account.port', 'account.password', 'flow.flow' ])
       // .leftJoin('flow', 'account.port', 'flow.port')
       // .groupBy('account.port').sum('flow.flow as sumFlow')
       // .whereBetween('flow.time', [options.startTime, options.endTime]);
 
+      const accounts = await knex('account').select([ 'port', 'password' ]);
+      const flows = await knex('flow').select([ 'port', 'sumFlow' ])
+      .sum('flow as sumFlow').groupBy('port')
+      .whereBetween('time', [ startTime, endTime ]);
 
-      const accounts = await knex.raw(`
-        SELECT account.port, account.password, IFNULL(SUM(flow.flow),0) AS sumFlow
-        FROM account
-        LEFT JOIN flow ON account.port = flow.port
-        GROUP BY account.port
-      `);
+      accounts.map(m => {
+        const flow = flows.filter(f => {
+          return f.port === m.port;
+        })[0];
+        if(flow) {
+          m.sumFlow = flow.sumFlow;
+        } else {
+          m.sumFlow = 0;
+        }
+        return m;
+      });
 
-      console.log(accounts);
       return accounts;
     } catch(err) {
       console.log(err);

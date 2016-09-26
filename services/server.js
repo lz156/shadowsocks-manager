@@ -22,9 +22,6 @@ module.exports = function (ctx) {
 
   const receiveCommand = async (data) => {
     try {
-      // if(data.toString() === '{}') {
-      //   return;
-      // }
       const message = JSON.parse(data.toString());
       console.log(message);
       if(message.command === 'add') {
@@ -35,7 +32,12 @@ module.exports = function (ctx) {
         const port = +message.port;
         return shadowsocks.removeAccount(port);
       } else if (message.command === 'list') {
-        return shadowsocks.listAccount();
+        const options = message.options || {
+          flow: true,
+          startTime: new Date(Date.now() - 5 * 60 * 1000),
+          endTime: Date.now(),
+        };
+        return shadowsocks.listAccount(options);
       } else if (message.command === 'changePassword') {
         const port = +message.port;
         const password = message.password;
