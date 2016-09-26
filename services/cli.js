@@ -8,7 +8,7 @@ module.exports = async function (ctx) {
     type: 'list',
     name: 'main',
     message: 'Select command: ',
-    choices: ['add', 'del', 'list']
+    choices: ['add port', 'del port', 'change password','list port']
   };
 
   const add = [{
@@ -45,6 +45,47 @@ module.exports = async function (ctx) {
       const password = answer.password;
       answer.cmd = {
         command: 'add',
+        port,
+        password,
+      };
+      return answer;
+    },
+  }];
+
+  const changePassword = [{
+    type: 'input',
+    name: 'port',
+    message: 'Enter port: ',
+    validate: function (value) {
+      if(Number.isNaN(+value)) {
+        return 'Please enter a valid port number';
+      } else if (+value <= 0 || +value >= 65536) {
+        return 'Port number must between 1 to 65535';
+      } else {
+        return true;
+      }
+    },
+  }, {
+    type: 'input',
+    name: 'password',
+    message: 'Enter password: ',
+    validate: function (value) {
+      if(value === '') {
+        return 'You can not set an empty password';
+      } else {
+        return true;
+      }
+    },
+  }, {
+    type: 'confirm',
+    name: 'confirm',
+    message: 'Is this correct?',
+    default: true,
+    when: (answer) => {
+      const port = +answer.port;
+      const password = answer.password;
+      answer.cmd = {
+        command: 'changePassword',
         port,
         password,
       };
@@ -95,12 +136,14 @@ module.exports = async function (ctx) {
     console.log();
     return inquirer.prompt(main)
     .then(answer => {
-      if(answer.main === 'add') {
+      if(answer.main === 'add port') {
         return inquirer.prompt(add);
-      } else if (answer.main === 'del') {
+      } else if (answer.main === 'del port') {
         return inquirer.prompt(del);
-      } else if (answer.main === 'list') {
+      } else if (answer.main === 'list port') {
         return list();
+      } else if (answer.main === 'change password') {
+        return inquirer.prompt(changePassword);;
       } else {
         return Promise.reject();
       }

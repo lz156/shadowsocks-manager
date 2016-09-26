@@ -36,6 +36,10 @@ module.exports = function (ctx) {
         return shadowsocks.removeAccount(port);
       } else if (message.command === 'list') {
         return shadowsocks.listAccount();
+      } else if (message.command === 'changePassword') {
+        const port = +message.port;
+        const password = message.password;
+        return shadowsocks.changePassword(port, password);
       } else {
         return Promise.reject();
       }
