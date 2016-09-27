@@ -7,11 +7,11 @@ module.exports = function (ctx) {
   let host;
   let port;
   let path;
-  if(config.manager.address.indexOf(':')) {
+  if(config.manager.address.indexOf(':') < 0) {
+    path = config.manager.address;
+  } else {
     host = config.manager.address.split(':')[0];
     port = +config.manager.address.split(':')[1];
-  } else {
-    path = config.manager.address;
   }
   const shadowsocks = ctx.get('shadowsocks');
 
