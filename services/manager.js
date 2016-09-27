@@ -46,14 +46,18 @@ module.exports = function (ctx) {
     });
   };
 
-  // sendMessage({
-  //   command: 'list',
-  //   port: 60001,
-  //   password: 'gyttyg',
-  // }).then(s => { console.log(s); }, e => { console.log(e); });
-  // sendMessage({}).then(s => { console.log(s); }, e => { console.log(e); });
-  // sendMessage({}).then(s => { console.log(s); }, e => { console.log(e); });
-
+  /*
+  {
+    command: 'add/del/list/changePassword',
+    port: 1234,
+    password: '123456',
+    options: {
+      flow: true,
+      startTime: xxx
+      endTime: xxx
+    },
+  }
+   */
   ctx.set('manager', {
     send: sendMessage,
   });

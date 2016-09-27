@@ -9,6 +9,14 @@ module.exports = function (ctx, next) {
   } else if (config.type === 'm') {
     ctx.task(path.resolve(__dirname, '../services/manager.js'));
     ctx.task(path.resolve(__dirname, '../services/cli.js'));
+  } else if (config.type === 'ms' || config.type === 'sm') {
+    ctx.task(path.resolve(__dirname, '../services/shadowsocks.js'));
+    ctx.task(path.resolve(__dirname, '../services/server.js'));
+    ctx.task(path.resolve(__dirname, '../services/manager.js'));
+    ctx.task(path.resolve(__dirname, '../services/cli.js'));
+  }
+  if(config.plugins.telegram.token) {
+    ctx.task(path.resolve(__dirname, '../plugins/telegram'));
   }
   next();
 };

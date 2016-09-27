@@ -21,10 +21,7 @@ module.exports = function (ctx) {
     console.log('send: ' + message);
     const client = dgram.createSocket('udp4');
     client.send(message, port, host, (err) => {
-      // client.on('message', function(m, r) {
-        // console.log(m.toString());
-        client.close();
-      // });
+      client.close();
     });
   };
 
@@ -105,6 +102,9 @@ module.exports = function (ctx) {
       const deleteAccount = await knex('account').where({
         port,
       }).delete();
+      await knex('flow').where({
+        port,
+      }).delete();
       sendMessage(`remove: {"server_port": ${ port }}`);
       return 'success';
     } catch(err) {
@@ -133,12 +133,6 @@ module.exports = function (ctx) {
       }
       const startTime = moment(options.startTime || new Date(0)).toDate();
       const endTime = moment(options.endTime || new Date()).toDate();
-
-      // const accounts = await knex('account')
-      // .select([ 'account.port', 'account.password', 'flow.flow' ])
-      // .leftJoin('flow', 'account.port', 'flow.port')
-      // .groupBy('account.port').sum('flow.flow as sumFlow')
-      // .whereBetween('flow.time', [options.startTime, options.endTime]);
 
       const accounts = await knex('account').select([ 'port', 'password' ]);
       const flows = await knex('flow').select([ 'port', 'sumFlow' ])
