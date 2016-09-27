@@ -17,23 +17,33 @@ module.exports = async function (ctx) {
   });
 
   bot.onText(/\/add (.+)/, (msg, match) => {
-    try {
-      const port = +match[1].split(' ')[0];
-      const password = match[1].split(' ')[1];
-      console.log(match[1]);
-      console.log(port);
-      manager.send({
-        command: 'add',
-        port,
-        password,
-      }).then(s => {
-        console.log(s);
-      }, e => {
-        console.log(e);
-      });
-    } catch(err) {
-      console.log(err);
-    }
+    const port = +match[1].split(' ')[0];
+    const password = match[1].split(' ')[1];
+    manager.send({
+      command: 'add',
+      port,
+      password,
+    });
+  });
+
+  bot.onText(/\/del (.+)/, (msg, match) => {
+    const port = +match[1].split(' ')[0];
+    manager.send({
+      command: 'del',
+      port,
+    });
+  });
+
+  bot.onText(/\/list (.+)/, (msg, match) => {
+    manager.send({
+      command: 'list',
+    }).then(s => {
+      console.log(s);
+      var fromId = msg.from.id;
+      bot.sendMessage(fromId, JSON.stringify(s));
+    }, e => {
+      console.log(e);
+    });
   });
 
   bot.on('message', function (msg) {
