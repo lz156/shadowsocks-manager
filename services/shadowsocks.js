@@ -37,24 +37,25 @@ module.exports = function (ctx) {
   };
 
   const compareWithLastFlow = (flow, lastFlow) => {
+    const realFlow = {};
     if(!lastFlow) {
       return flow;
     }
     for(const f in flow) {
-      if(lastFlow[f] === flow[f]) {
-        flow[f] = 0;
+      if(lastFlow[f] !== flow[f]) {
+        realFlow[f] = flow[f];
       }
     }
-    return flow;
+    return realFlow;
   };
 
   client.on('message', async (msg, rinfo) => {
     const msgStr = new String(msg);
     if(msgStr.substr(0, 5) === 'stat:') {
       let flow = JSON.parse(msgStr.substr(5));
-      flow = compareWithLastFlow(flow, lastFlow);
+      const realFlow = compareWithLastFlow(flow, lastFlow);
       lastFlow = flow;
-      const insertFlow = Object.keys(flow).map(m => {
+      const insertFlow = Object.keys(realFlow).map(m => {
         return {
           port: +m,
           flow: +flow[m],
