@@ -34,7 +34,7 @@ module.exports = async function (ctx) {
     });
   });
 
-  bot.onText(/\/list (.+)/, (msg, match) => {
+  bot.onText(/\/list(.+)/, (msg, match) => {
     manager.send({
       command: 'list',
     }).then(s => {

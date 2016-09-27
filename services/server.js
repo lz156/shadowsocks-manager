@@ -2,13 +2,17 @@
 
 module.exports = function (ctx) {
   const crypto = require('crypto');
+  const path = require('path');
   const config = ctx.config.all();
   const password = config.manager.password;
   let host;
   let port;
-  let path;
+  let socketPath;
   if(config.manager.address.indexOf(':') < 0) {
-    path = config.manager.address;
+    socketPath = config.manager.address;
+    if(process.platform === 'win32') {
+      socketPath = path.join('\\\\?\\pipe', process.cwd(), config.manager.address);
+    }
   } else {
     host = config.manager.address.split(':')[0];
     port = +config.manager.address.split(':')[1];
@@ -45,7 +49,7 @@ module.exports = function (ctx) {
           endTime: Date.now(),
         };
         return shadowsocks.listAccount(options);
-      } else if (message.command === 'changePassword') {
+      } else if (message.command === 'pwd') {
         const port = +message.port;
         const password = message.password;
         return shadowsocks.changePassword(port, password);
@@ -106,7 +110,7 @@ module.exports = function (ctx) {
     throw err;
   });
 
-  server.listen(path || {
+  server.listen(socketPath || {
     port,
     host,
   }, () => {
