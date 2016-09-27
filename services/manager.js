@@ -4,8 +4,15 @@ module.exports = function (ctx) {
   const net = require('net');
   const crypto = require('crypto');
   const config = ctx.config.all();
-  const host = config.manager.address.split(':')[0];
-  const port = +config.manager.address.split(':')[1];
+  let host;
+  let port;
+  let path;
+  if(config.manager.address.indexOf(':')) {
+    host = config.manager.address.split(':')[0];
+    port = +config.manager.address.split(':')[1];
+  } else {
+    path = config.manager.address;
+  }
   const password = config.manager.password;
 
   const pack = (data) => {
@@ -21,7 +28,7 @@ module.exports = function (ctx) {
 
   const sendMessage = (data) => {
     return new Promise((res, rej) => {
-      const client = net.connect({
+      const client = net.connect(path || {
         host,
         port,
       }, () => {

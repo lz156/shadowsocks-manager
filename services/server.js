@@ -4,8 +4,15 @@ module.exports = function (ctx) {
   const crypto = require('crypto');
   const config = ctx.config.all();
   const password = config.manager.password;
-  const host = config.manager.address.split(':')[0];
-  const port = +config.manager.address.split(':')[1];
+  let host;
+  let port;
+  let path;
+  if(config.manager.address.indexOf(':')) {
+    host = config.manager.address.split(':')[0];
+    port = +config.manager.address.split(':')[1];
+  } else {
+    path = config.manager.address;
+  }
   const shadowsocks = ctx.get('shadowsocks');
 
   const net = require('net');
@@ -99,7 +106,10 @@ module.exports = function (ctx) {
     throw err;
   });
 
-  server.listen(port, host, () => {
+  server.listen(path || {
+    port,
+    host,
+  }, () => {
     console.log(`server listen on ${ host }:${ port }`);
   });
 };
