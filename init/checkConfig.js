@@ -15,37 +15,28 @@ module.exports = function (ctx, next) {
     .version(version)
     .option('-c, --config [file]', 'config file, default: ~/.smc/default.yml')
     .option('-d, --db [file]', 'sqlite3 file, default: ~/.smc/db.sqlite')
-    .option('-e, --empty', 'clean db file')
+    .option('-e, --empty', 'clean database')
     .option('-t, --type [type]', 'manager type, s for server side, m for manager side, default: s')
-    .option('-h, --host [address]', 'ss-manager host, only for type s')
-    .option('-p, --port [port]', 'ss-manager port, only for type s')
-    .option('-H, --manager-host [address]', 'manager host, type s for listening, type m for manager')
-    .option('-P, --manager-port [port]', 'manager port, type s for listening, type m for manager')
-    .option('-x, --password [password]', 'manager password, both server side and manager side must be equals')
+    .option('-s, --shadowsocks [address]', 'ss-manager address, default: 127.0.0.1:6001, only for type s')
+    .option('-m, --manager [address]', 'manager address, default: 127.0.0.1:6002, only for type m')
+    .option('-k, --password [password]', 'manager password, both server side and manager side must be equals')
     .parse(process.argv);
 
   config.type = program.type || config.type;
   config.empty = program.empty || config.empty;
-  if(program.host) {
-    config.shadowsocks.host = program.host;
+  if(program.shadowsocks) {
+    config.shadowsocks.address = program.shadowsocks;
   }
-  if(program.port) {
-    config.shadowsocks.port = program.port;
-  }
-  if(program.managerHost) {
-    config.listen.host = program.managerHost;
-  }
-  if(program.managerPort) {
-    config.listen.port = program.managerPort;
+  if(program.manager) {
+    config.manager.address = program.manager;
   }
   if(program.password) {
-    config.listen.password = program.password;
+    config.manager.password = program.password;
   }
   if(program.db) {
     config.knex.connection.filename = path.resolve(program.db);
   } else {
     config.knex.connection.filename = path.resolve(smcPath + '/' + config.knex.connection.filename);
   }
-
   next();
 };

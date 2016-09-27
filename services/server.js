@@ -3,9 +3,9 @@
 module.exports = function (ctx) {
   const crypto = require('crypto');
   const config = ctx.config.all();
-  const password = config.listen.password;
-  const host = config.listen.host;
-  const port = +config.listen.port;
+  const password = config.manager.password;
+  const host = config.manager.address.split(':')[0];
+  const port = +config.manager.address.split(':')[1];
   const shadowsocks = ctx.get('shadowsocks');
 
   const net = require('net');

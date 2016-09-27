@@ -5,8 +5,8 @@ module.exports = function (ctx) {
   const client = dgram.createSocket('udp4');
 
   const config = ctx.config.all();
-  const host = config.shadowsocks.host;
-  const port = +config.shadowsocks.port;
+  const host = config.shadowsocks.address.split(':')[0];
+  const port = +config.shadowsocks.address.split(':')[1];
 
   const knex = ctx.get('knex.client');
 

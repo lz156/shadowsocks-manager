@@ -4,7 +4,9 @@ module.exports = function (ctx) {
   const net = require('net');
   const crypto = require('crypto');
   const config = ctx.config.all();
-  const password = config.listen.password;
+  const host = config.manager.address.split(':')[0];
+  const port = +config.manager.address.split(':')[1];
+  const password = config.manager.password;
 
   const pack = (data) => {
     const message = JSON.stringify(data);
@@ -20,8 +22,8 @@ module.exports = function (ctx) {
   const sendMessage = (data) => {
     return new Promise((res, rej) => {
       const client = net.connect({
-        host: config.listen.host,
-        port: config.listen.port,
+        host,
+        port,
       }, () => {
         client.write(pack(data));
       });

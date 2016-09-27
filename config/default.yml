@@ -2,12 +2,10 @@ type: s
 empty: false
 
 shadowsocks:
-  host: 127.0.0.1
-  port: 6001
+  address: 127.0.0.1:6001
 
-listen:
-  host: 127.0.0.1
-  port: 6002
+manager:
+  address: 127.0.0.1:6002
   password: '123456'
 
 knex:
