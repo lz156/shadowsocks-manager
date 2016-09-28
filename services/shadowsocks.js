@@ -19,9 +19,20 @@ module.exports = function (ctx) {
 
   const sendMessage = (message) => {
     console.log('send: ' + message);
-    const client = dgram.createSocket('udp4');
-    client.send(message, port, host, (err) => {
-      client.close();
+    return new Promise((res, rej) => {
+      const client = dgram.createSocket('udp4');
+      client.send(message, port, host, (err) => {
+        if(err) {
+          return rej('error');
+        }
+      });
+      client.on('message', (msg) => {
+        client.close();
+        res('ok');
+      });
+      client.on('close', () => {
+        return rej('close');
+      });
     });
   };
 
@@ -90,10 +101,10 @@ module.exports = function (ctx) {
         port,
         password,
       });
-      sendMessage(`add: {"server_port": ${ port }, "password": "${ password }"}`);
-      return 'success';
+      await sendMessage(`add: {"server_port": ${ port }, "password": "${ password }"}`);
+      return { port, password };
     } catch(err) {
-      Promise.reject('error');
+      return Promise.reject('error');
     }
   };
 
@@ -105,10 +116,10 @@ module.exports = function (ctx) {
       await knex('flow').where({
         port,
       }).delete();
-      sendMessage(`remove: {"server_port": ${ port }}`);
-      return 'success';
+      await sendMessage(`remove: {"server_port": ${ port }}`);
+      return { port };
     } catch(err) {
-      Promise.reject('error');
+      return Promise.reject('error');
     }
   };
 
@@ -117,11 +128,11 @@ module.exports = function (ctx) {
       const updateAccount = await knex('account').where({port}).update({
         password,
       });
-      sendMessage(`remove: {"server_port": ${ port }}`);
-      sendMessage(`add: {"server_port": ${ port }, "password": "${ password }"}`);
-      return 'success';
+      await sendMessage(`remove: {"server_port": ${ port }}`);
+      await sendMessage(`add: {"server_port": ${ port }, "password": "${ password }"}`);
+      return { port, password };
     } catch(err) {
-      Promise.reject('error');
+      return Promise.reject('error');
     }
   };
 
@@ -153,8 +164,7 @@ module.exports = function (ctx) {
 
       return accounts;
     } catch(err) {
-      console.log(err);
-      Promise.reject('error');
+      return Promise.reject('error');
     }
   };
 
