@@ -13,7 +13,14 @@ module.exports = async function (ctx) {
     var fromId = msg.from.id;
     console.log(msg);
     var resp = match[1];
-    bot.sendMessage(fromId, resp);
+    bot.sendMessage(fromId, resp, {
+      reply_markup: {
+        keyboard: [[{
+          text: 'A',
+          
+        }, 'b', 'c', 'd'], ['1', '2', '3', '4'] ]
+      }
+    });
   });
 
   bot.onText(/\/add (.+)/, (msg, match) => {
@@ -34,7 +41,8 @@ module.exports = async function (ctx) {
     });
   });
 
-  bot.onText(/\/list(.+)/, (msg, match) => {
+  bot.onText(/\/list (.+)/, (msg, match) => {
+    console.log('list');
     manager.send({
       command: 'list',
     }).then(s => {
@@ -46,9 +54,9 @@ module.exports = async function (ctx) {
     });
   });
 
-  bot.on('message', function (msg) {
-    var chatId = msg.chat.id;
-    var photo = 'cats.png';
-    bot.sendPhoto(chatId, photo, {caption: 'Lovely kittens'});
-  });
+  // bot.on('message', function (msg) {
+  //   var chatId = msg.chat.id;
+  //   var photo = 'cats.png';
+  //   bot.sendPhoto(chatId, photo, {caption: 'Lovely kittens'});
+  // });
 };
