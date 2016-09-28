@@ -96,7 +96,7 @@ module.exports = async function (ctx) {
     isManager(fromId).then(s => {
       const port = +match[1].split(' ')[0];
       const password = match[1].split(' ')[1];
-      manager.send({
+      return manager.send({
         command: 'pwd',
         port,
         password,
@@ -104,6 +104,7 @@ module.exports = async function (ctx) {
     }).then(s => {
       bot.sendMessage(fromId, `Change password success. [${ s.port }][${ s.password }]`);
     }).catch(e => {
+      console.log(e);
       bot.sendMessage(fromId, 'Error');
     });;
   });

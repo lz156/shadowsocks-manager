@@ -113,6 +113,9 @@ module.exports = function (ctx) {
       const deleteAccount = await knex('account').where({
         port,
       }).delete();
+      if(deleteAccount <= 0) {
+        return Promise.reject('error');
+      }
       await knex('flow').where({
         port,
       }).delete();
@@ -128,6 +131,9 @@ module.exports = function (ctx) {
       const updateAccount = await knex('account').where({port}).update({
         password,
       });
+      if(updateAccount <= 0) {
+        return Promise.reject('error');
+      }
       await sendMessage(`remove: {"server_port": ${ port }}`);
       await sendMessage(`add: {"server_port": ${ port }, "password": "${ password }"}`);
       return { port, password };
