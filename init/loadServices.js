@@ -4,7 +4,8 @@ module.exports = function (ctx, next) {
   const config = ctx.config.all();
   const plugins = () => {
     if(config.plugins.telegram.use) {
-      ctx.task(path.resolve(__dirname, '../plugins/telegram'));
+      ctx.task(path.resolve(__dirname, '../plugins/telegram/db.js'));
+      ctx.task(path.resolve(__dirname, '../plugins/telegram/index.js'));
     }
     if(config.plugins.cli.use) {
       ctx.task(path.resolve(__dirname, '../plugins/cli'));

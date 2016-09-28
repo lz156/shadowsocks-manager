@@ -85,7 +85,7 @@ module.exports = async function (ctx) {
       const port = +answer.port;
       const password = answer.password;
       answer.cmd = {
-        command: 'cpwd',
+        command: 'pwd',
         port,
         password,
       };

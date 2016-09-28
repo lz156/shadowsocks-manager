@@ -52,7 +52,7 @@ module.exports = function (ctx) {
 
   /*
   {
-    command: 'add/del/list/changePassword',
+    command: 'add/del/list/pwd',
     port: 1234,
     password: '123456',
     options: {

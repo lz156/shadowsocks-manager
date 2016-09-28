@@ -9,54 +9,94 @@ module.exports = async function (ctx) {
 
   const bot = new TelegramBot(token, {polling: true});
 
+  const knex = ctx.get('knex.client');
+
+  const setManager = async (id) => {
+    const findId = await knex('telegram').select(['value']).where({
+      key: 'manager',
+    });
+    if(findId.length > 0) {
+      return Promise.reject();
+    }
+    const insertId = await knex('telegram').insert({
+      key: 'manager',
+      value: id,
+    });
+    return id;
+  };
+
+  const isManager = async (id) => {
+    const findId = await knex('telegram').select(['value']).where({
+      key: 'manager',
+      value: id,
+    });
+    if (findId.length > 0) {
+      return findId.value;
+    } else {
+      return Promise.reject('Unauthorized');
+    }
+  };
+
+  bot.onText(/\/auth/, (msg, match) => {
+    const fromId = msg.from.id;
+    setManager(fromId).then(s => {
+      bot.sendMessage(fromId, 'Set manager success');
+    }, e => {
+      bot.sendMessage(fromId, 'Manager is already set');
+    });
+  });
+
   bot.onText(/\/echo (.+)/, function (msg, match) {
     var fromId = msg.from.id;
+    setManager(fromId);
     console.log(msg);
     var resp = match[1];
     bot.sendMessage(fromId, resp, {
       reply_markup: {
-        keyboard: [[{
-          text: 'A',
-          
-        }, 'b', 'c', 'd'], ['1', '2', '3', '4'] ]
+        keyboard: [['a', 'b', 'c', 'd'], ['1', '2', '3', '4'] ],
+        one_time_keyboard: true,
       }
     });
   });
 
   bot.onText(/\/add (.+)/, (msg, match) => {
-    const port = +match[1].split(' ')[0];
-    const password = match[1].split(' ')[1];
-    manager.send({
-      command: 'add',
-      port,
-      password,
+    const fromId = msg.from.id;
+    isManager(fromId).then(s => {
+      const port = +match[1].split(' ')[0];
+      const password = match[1].split(' ')[1];
+      manager.send({
+        command: 'add',
+        port,
+        password,
+      });
+    }, e => {
+      bot.sendMessage(fromId, 'Unauthorized');
     });
   });
 
   bot.onText(/\/del (.+)/, (msg, match) => {
-    const port = +match[1].split(' ')[0];
-    manager.send({
-      command: 'del',
-      port,
-    });
-  });
-
-  bot.onText(/\/list (.+)/, (msg, match) => {
-    console.log('list');
-    manager.send({
-      command: 'list',
-    }).then(s => {
-      console.log(s);
-      var fromId = msg.from.id;
-      bot.sendMessage(fromId, JSON.stringify(s));
+    const fromId = msg.from.id;
+    isManager(fromId).then(s => {
+      const port = +match[1].split(' ')[0];
+      manager.send({
+        command: 'del',
+        port,
+      });
     }, e => {
-      console.log(e);
+      bot.sendMessage(fromId, 'Unauthorized');
     });
   });
 
-  // bot.on('message', function (msg) {
-  //   var chatId = msg.chat.id;
-  //   var photo = 'cats.png';
-  //   bot.sendPhoto(chatId, photo, {caption: 'Lovely kittens'});
-  // });
+  bot.onText(/\/list/, (msg, match) => {
+    const fromId = msg.from.id;
+    isManager(fromId).then(s => {
+      return manager.send({
+        command: 'list',
+      });
+    }).then(s => {
+      bot.sendMessage(fromId, JSON.stringify(s));
+    }).catch(() => {
+      bot.sendMessage(fromId, 'Unauthorized');
+    });
+  });
 };
