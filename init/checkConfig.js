@@ -9,12 +9,12 @@ module.exports = function (ctx, next) {
   const version = require(path.resolve(__dirname, '../package.json')).version;
   const config = ctx.config.all();
 
-  let smcPath = path.resolve(os.homedir() + '/.smc/');
+  let ssmgrPath = path.resolve(os.homedir() + '/.ssmgr/');
 
   program
     .version('shadowsocks-manager-cli ' + version)
-    .option('-c, --config [file]', 'config file, default: ~/.smc/default.yml')
-    .option('-d, --db [file]', 'sqlite3 file, default: ~/.smc/db.sqlite')
+    .option('-c, --config [file]', 'config file, default: ~/.ssmgr/default.yml')
+    .option('-d, --db [file]', 'sqlite3 file, default: ~/.ssmgr/db.sqlite')
     .option('-e, --empty', 'clean database')
     .option('-t, --type [type]', 'manager type, s for server side, m for manager side, default: s')
     .option('-s, --shadowsocks [address]', 'ss-manager address, default: 127.0.0.1:6001, only for type s')
@@ -40,7 +40,7 @@ module.exports = function (ctx, next) {
   if(program.db) {
     config.knex.connection.filename = path.resolve(program.db);
   } else {
-    config.knex.connection.filename = path.resolve(smcPath + '/' + config.knex.connection.filename);
+    config.knex.connection.filename = path.resolve(ssmgrPath + '/' + config.knex.connection.filename);
   }
   next();
 };

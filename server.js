@@ -5,7 +5,7 @@ require('./init/moveConfigFile.js');
 const os = require('os');
 const path = require('path');
 module.exports = require('bamei').create({
-  configDir: path.resolve(os.homedir() + '/.smc/'),
+  configDir: path.resolve(os.homedir() + '/.ssmgr/'),
 }, function (ctx) {
 
   ctx.task(path.resolve(__dirname, './init/checkConfig.js'));

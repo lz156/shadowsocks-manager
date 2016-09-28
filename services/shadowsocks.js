@@ -167,7 +167,6 @@ module.exports = function (ctx) {
         }
         return m;
       });
-
       return accounts;
     } catch(err) {
       return Promise.reject('error');
@@ -179,5 +178,6 @@ module.exports = function (ctx) {
     removeAccount,
     changePassword,
     listAccount,
+    getFlow,
   });
 };

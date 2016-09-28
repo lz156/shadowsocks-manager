@@ -1,6 +1,6 @@
 {
   "name": "shadowsocks-manager-cli",
-  "version": "0.0.41",
+  "version": "0.0.42",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -32,6 +32,6 @@
   },
   "homepage": "https://github.com/gyteng/shadowsocks-manager-cli#readme",
   "bin": {
-    "smc": "./bin/smc"
+    "ssmgr": "./bin/ssmgr"
   }
 }
