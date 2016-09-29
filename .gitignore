@@ -37,9 +37,5 @@ jspm_packages
 .node_repl_history
 .remote-sync.json
 
-# db
-db/
-!db/dbFileHere.txt
-
 # config
 config/development.yml
