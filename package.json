@@ -1,6 +1,6 @@
 {
-  "name": "shadowsocks-manager-cli",
-  "version": "0.0.44",
+  "name": "shadowsocks-manager",
+  "version": "0.0.45",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -26,12 +26,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gyteng/shadowsocks-manager-cli.git"
+    "url": "git+https://github.com/shadowsocks/shadowsocks-manager.git"
   },
   "bugs": {
-    "url": "https://github.com/gyteng/shadowsocks-manager-cli/issues"
+    "url": "https://github.com/shadowsocks/shadowsocks-manager/issues"
   },
-  "homepage": "https://github.com/gyteng/shadowsocks-manager-cli#readme",
+  "homepage": "https://github.com/shadowsocks/shadowsocks-manager#readme",
   "bin": {
     "ssmgr": "./bin/ssmgr"
   }

@@ -10,7 +10,7 @@ module.exports = function (ctx) {
   const sched0 = later.parse.recur().every(minute).minute();
   const time = minute * 60 * 1000;
 
-  const getFlow = async () => {
+  const saveFlow = async () => {
     try {
       const servers = await knex('server').select(['name', 'host', 'port', 'password']);
       servers.forEach(async server => {
@@ -46,8 +46,8 @@ module.exports = function (ctx) {
     }
   };
 
-  getFlow();
+  saveFlow();
   const timer0 = later.setInterval(() => {
-    getFlow();
+    saveFlow();
   }, sched0);
 };
