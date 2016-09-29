@@ -23,3 +23,8 @@ use `node server.js` to run this program.
 npm i -g shadowsocks-manager
 ```
 use `ssmgr` to run this program.
+
+### Plugins
+cli  
+flowSaver  
+telegram  
