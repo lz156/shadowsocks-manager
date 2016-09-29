@@ -43,16 +43,19 @@ module.exports = function (ctx) {
         const port = +message.port;
         return shadowsocks.removeAccount(port);
       } else if (message.command === 'list') {
-        const options = message.options || {
-          flow: true,
-          startTime: new Date(Date.now() - 5 * 60 * 1000),
-          endTime: Date.now(),
-        };
-        return shadowsocks.listAccount(options);
+        // const options = message.options || {
+        //   flow: true,
+        //   startTime: new Date(Date.now() - 5 * 60 * 1000),
+        //   endTime: Date.now(),
+        // };
+        return shadowsocks.listAccount();
       } else if (message.command === 'pwd') {
         const port = +message.port;
         const password = message.password;
         return shadowsocks.changePassword(port, password);
+      } else if (message.command === 'flow') {
+        const options = message.options;
+        return shadowsocks.getFlow(options);
       } else {
         return Promise.reject();
       }

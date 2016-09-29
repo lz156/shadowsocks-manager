@@ -142,16 +142,43 @@ module.exports = function (ctx) {
     }
   };
 
-  const listAccount = async (options = {}) => {
+  const listAccount = async () => {
     try {
-      if(!options.flow) {
+      // if(!options.flow) {
         const accounts = await knex('account').select([ 'port', 'password' ]);
         return accounts;
-      }
+      // }
+      // const startTime = moment(options.startTime || new Date(0)).toDate();
+      // const endTime = moment(options.endTime || new Date()).toDate();
+      //
+      // const accounts = await knex('account').select([ 'port', 'password' ]);
+      // const flows = await knex('flow').select([ 'port', 'sumFlow' ])
+      // .sum('flow as sumFlow').groupBy('port')
+      // .whereBetween('time', [ startTime, endTime ]);
+      //
+      // accounts.map(m => {
+      //   const flow = flows.filter(f => {
+      //     return f.port === m.port;
+      //   })[0];
+      //   if(flow) {
+      //     m.sumFlow = flow.sumFlow;
+      //   } else {
+      //     m.sumFlow = 0;
+      //   }
+      //   return m;
+      // });
+      // return accounts;
+    } catch(err) {
+      return Promise.reject('error');
+    }
+  };
+
+  const getFlow = async (options) => {
+    try {
       const startTime = moment(options.startTime || new Date(0)).toDate();
       const endTime = moment(options.endTime || new Date()).toDate();
 
-      const accounts = await knex('account').select([ 'port', 'password' ]);
+      const accounts = await knex('account').select([ 'port' ]);
       const flows = await knex('flow').select([ 'port', 'sumFlow' ])
       .sum('flow as sumFlow').groupBy('port')
       .whereBetween('time', [ startTime, endTime ]);
@@ -167,6 +194,9 @@ module.exports = function (ctx) {
         }
         return m;
       });
+      if(option.clear) {
+        await knex('flow').whereBetween('time', [ startTime, endTime ]).delete();
+      }
       return accounts;
     } catch(err) {
       return Promise.reject('error');
@@ -178,5 +208,6 @@ module.exports = function (ctx) {
     removeAccount,
     changePassword,
     listAccount,
+    getFlow,
   });
 };
