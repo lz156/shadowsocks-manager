@@ -17,9 +17,9 @@ module.exports = function (ctx) {
     host = config.manager.address.split(':')[0];
     port = +config.manager.address.split(':')[1];
   }
-  const password = config.manager.password;
+  let password = config.manager.password;
 
-  const pack = (data) => {
+  const pack = (data, password) => {
     const message = JSON.stringify(data);
     const dataBuffer = new Buffer(message);
     const length = dataBuffer.length + 2;
@@ -30,13 +30,13 @@ module.exports = function (ctx) {
     return pack;
   };
 
-  const sendMessage = (data) => {
+  const sendMessage = (data, options) => {
     return new Promise((res, rej) => {
-      const client = net.connect(socketPath || {
+      const client = net.connect(options || socketPath || {
         host,
         port,
       }, () => {
-        client.write(pack(data));
+        client.write(pack(data, (options? options.password: null) || password));
       });
       client.on('data', data => {
         const message = JSON.parse(data.toString());
@@ -52,14 +52,18 @@ module.exports = function (ctx) {
 
   /*
   {
-    command: 'add/del/list/pwd',
+    command: 'add/del/list/pwd/flow',
     port: 1234,
     password: '123456',
     options: {
-      flow: true,
       startTime: xxx
       endTime: xxx
+      clear: true
     },
+  }, {
+    host: '',
+    port: '',
+    password: '',
   }
    */
   ctx.set('manager', {

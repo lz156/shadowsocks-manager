@@ -3,12 +3,13 @@ const path = require('path');
 module.exports = function (ctx, next) {
   const config = ctx.config.all();
   const plugins = () => {
-    if(config.plugins.telegram.use) {
-      ctx.task(path.resolve(__dirname, '../plugins/telegram/db.js'));
-      ctx.task(path.resolve(__dirname, '../plugins/telegram/index.js'));
+    if(!config.plugins) {
+      return;
     }
-    if(config.plugins.cli.use) {
-      ctx.task(path.resolve(__dirname, '../plugins/cli'));
+    for(const name in config.plugins) {
+      if(config.plugins[name].use) {
+        ctx.task(path.resolve(__dirname, `../plugins/${ name }/index.js`));
+      }
     }
   };
   const shadowsocks = () => {
@@ -22,9 +23,6 @@ module.exports = function (ctx, next) {
   if(config.type === 's') {
     shadowsocks();
   } else if (config.type === 'm') {
-    manager();
-  } else if (config.type === 'ms' || config.type === 'sm') {
-    shadowsocks();
     manager();
   }
   next();

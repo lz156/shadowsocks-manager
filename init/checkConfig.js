@@ -17,8 +17,8 @@ module.exports = function (ctx, next) {
     .option('-d, --db [file]', 'sqlite3 file, default: ~/.ssmgr/db.sqlite')
     .option('-e, --empty', 'clean database')
     .option('-t, --type [type]', 'manager type, s for server side, m for manager side, default: s')
-    .option('-s, --shadowsocks [address]', 'ss-manager address, default: 127.0.0.1:6001, only for type s')
-    .option('-m, --manager [address]', 'manager address, default: 127.0.0.1:6002, only for type m')
+    .option('-s, --shadowsocks [address]', 'ss-manager address, default: 127.0.0.1:6001')
+    .option('-m, --manager [address]', 'manager address, default: 127.0.0.1:6002')
     .option('-p, --password [password]', 'manager password, both server side and manager side must be equals')
     .option('-v, --verbose', 'show verbose info')
     .parse(process.argv);

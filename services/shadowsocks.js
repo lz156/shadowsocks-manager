@@ -18,7 +18,7 @@ module.exports = function (ctx) {
   };
 
   const sendMessage = (message) => {
-    console.log('send: ' + message);
+    console.log('Send to shadowsocks: ' + message);
     return new Promise((res, rej) => {
       const client = dgram.createSocket('udp4');
       client.send(message, port, host, (err) => {
@@ -194,11 +194,12 @@ module.exports = function (ctx) {
         }
         return m;
       });
-      if(option.clear) {
+      if(options.clear) {
         await knex('flow').whereBetween('time', [ startTime, endTime ]).delete();
       }
       return accounts;
     } catch(err) {
+      console.log(err);
       return Promise.reject('error');
     }
   };

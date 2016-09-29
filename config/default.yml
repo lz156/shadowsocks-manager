@@ -11,10 +11,8 @@ manager:
 
 plugins:
   telegram:
-    use: false
     token: ''
   cli:
-    use: true
 
 knex:
   client: 'sqlite3'
