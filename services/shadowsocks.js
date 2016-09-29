@@ -178,6 +178,5 @@ module.exports = function (ctx) {
     removeAccount,
     changePassword,
     listAccount,
-    getFlow,
   });
 };

@@ -46,18 +46,54 @@ module.exports = async function (ctx) {
     });
   });
 
-  bot.onText(/\/echo (.+)/, function (msg, match) {
-    var fromId = msg.from.id;
-    setManager(fromId);
-    console.log(msg);
-    var resp = match[1];
-    bot.sendMessage(fromId, resp, {
-      reply_markup: {
-        keyboard: [['a', 'b', 'c', 'd'], ['1', '2', '3', '4'] ],
-        one_time_keyboard: true,
-      }
-    });
-  });
+  const numberPad = {
+    inline_keyboard: [
+      [
+        { text: '7', callback_data: '7', },
+        { text: '8', callback_data: '8', },
+        { text: '9', callback_data: '9', },
+      ],
+      [
+        { text: '4', callback_data: '4', },
+        { text: '5', callback_data: '5', },
+        { text: '6', callback_data: '6', },
+      ],
+      [
+        { text: '1', callback_data: '1', },
+        { text: '2', callback_data: '2', },
+        { text: '3', callback_data: '3', },
+      ],
+      [
+        { text: 'C', callback_data: 'C', },
+        { text: '0', callback_data: '0', },
+        { text: 'E', callback_data: 'E', },
+      ],
+    ],
+  };
+
+  // bot.onText(/\/test/, function (msg, match) {
+  //   var fromId = msg.from.id;
+  //   setManager(fromId);
+  //   var resp = 'Please enter port number: ';
+  //   bot.sendMessage(fromId, resp, {
+  //     reply_markup: numberPad
+  //   });
+  // });
+  //
+  // bot.on('callback_query', (msg) => {
+  //   console.log();
+  //   console.log(msg);
+  //   const message_id = msg.message.message_id;
+  //   const chat_id = msg.message.chat.id;
+  //   console.log(message_id);
+  //   console.log(chat_id);
+  //   bot.answerCallbackQuery(msg.id, '', false).then(s=>{console.log(s);}, e=>{console.log(e);});
+  //   bot.editMessageText('ZZZ', {
+  //     message_id,
+  //     chat_id,
+  //     reply_markup: numberPad,
+  //   }).then(s=>{console.log(s);}, e=>{console.log(e);});
+  // });
 
   bot.onText(/\/add (.+)/, (msg, match) => {
     const fromId = msg.from.id;
