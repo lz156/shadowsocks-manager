@@ -1,5 +1,3 @@
-'use strict';
-
 require('babel-core/register');
 require('./init/moveConfigFile.js');
 const os = require('os');
@@ -12,6 +10,7 @@ module.exports = require('bamei').create({
   ctx.module('knex');
   ctx.task(path.resolve(__dirname, './init/loadModels.js'));
   ctx.task(path.resolve(__dirname, './init/loadServices.js'));
+  ctx.task(path.resolve(__dirname, './init/loadPlugins.js'));
 
   ctx.init(err => {
     if (err) throw err;

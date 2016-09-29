@@ -1,7 +1,6 @@
 'use strict';
 
 module.exports = async function (ctx) {
-  console.log('TelegramBot');
   const path = require('path');
   ctx.task(path.resolve(__dirname, './db.js'));
   const TelegramBot = require('node-telegram-bot-api');

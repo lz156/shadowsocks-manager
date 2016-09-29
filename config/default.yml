@@ -11,8 +11,12 @@ manager:
 
 plugins:
   telegram:
+    use: false
     token: ''
   cli:
+    use: false
+  flowSaver:
+    use: true
 
 knex:
   client: 'sqlite3'
